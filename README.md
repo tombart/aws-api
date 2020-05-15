@@ -56,7 +56,7 @@ This user is add to the group: apiEc2UseGroup (from serverless.yaml) and has per
 
 Logs can be found in cloudwatch.
 
-##W hy this solution:
+## Why this solution:
 1. Providing this api won't be used often or have high throughput it is cheaper to implement as lambda. No admin work,
 only using resources it needs at the time, and can be free of charge when not in use.
 2. Used Springboot to be able to test and start locally, however lambda integration not tested until deployed. This
