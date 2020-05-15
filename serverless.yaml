@@ -1,0 +1,44 @@
+service: aws-api-lambda
+
+frameworkVersion: ">=1.2.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: java8
+  timeout: 35
+  region: eu-west-1
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - "ec2:Describe*"
+        - "ec2:Get*"
+        - "ec2:Search*"
+      Resource:
+        - '*'
+
+package:
+  artifact: build/distributions/aws-api-1.0-SNAPSHOT.zip
+
+functions:
+  get-ec2Instances:
+    handler: com.cisco.StreamLambdaHandler
+    events:
+      - http:
+          path: aws-api/v1/regions/{region}/ec2
+          method: get
+          authorizer: aws_iam
+
+resources:
+  Resources:
+    apiEc2UseGroup:
+      Type: AWS::IAM::Group
+      Properties:
+        GroupName: apiEc2UseGroup
+        Policies:
+          - PolicyName: apiEc2UserPolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: 'Allow'
+                  Action: 'execute-api:Invoke'
+                  Resource: 'arn:aws:execute-api:*:*:*/*/*/*'

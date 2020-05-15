@@ -1,0 +1,61 @@
+plugins {
+    id 'java'
+}
+
+group 'com.cisco'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+configurations.all {
+    exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+}
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtimeClasspath
+    }
+}
+
+dependencies {
+    implementation 'com.amazonaws:aws-lambda-java-core:1.2.0'
+    implementation 'com.amazonaws:aws-lambda-java-events:2.2.7'
+
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.10.Final'
+    compile('com.amazonaws:aws-java-sdk-ec2:1.11.762') {
+        exclude group: 'commons-logging'
+    }
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '2.2.6.RELEASE'
+    compile group: 'com.amazonaws.serverless', name: 'aws-serverless-java-container-springboot2', version: '1.5'
+    compile('org.springframework.boot:spring-boot-starter-web:2.2.6.RELEASE') {
+        exclude group: "spring-boot-starter-logging", module: "spring-boot-starter-logging"
+    }
+    runtimeOnly 'com.amazonaws:aws-lambda-java-log4j2:1.1.0'
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.2.6.RELEASE'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.6.2'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.6.2'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.2'
+
+    testCompile group: 'org.assertj', name: 'assertj-core-java8', version: '1.0.0m1'
+    testCompile group: 'commons-lang', name: 'commons-lang', version: '2.6'
+    testCompileOnly 'org.projectlombok:lombok:1.18.12'
+
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+assemble.dependsOn buildZip
