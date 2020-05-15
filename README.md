@@ -50,7 +50,7 @@ The app is deployed on:
 
 Test credentials:  
 AccessKey: enquire  
-SecretKey: enquire
+SecretKey: enquire   
 Aws Region: eu-west-1  
 This user is add to the group: apiEc2UseGroup (from serverless.yaml) and has permission to call this endpoint.
 
